@@ -7,12 +7,20 @@ import org.json.JSONObject;
 public class Door {
   private final String id;
   private boolean closed; // physically
-  private boolean locked;
+  private boolean locked; // new
+  private final Space fromSpace; // Where it comes from
+  private final Space toSpace; // Where it goes to
 
-  public Door(String id) {
+  public Door(String id, Space fromSpace, Space toSpace) {
     this.id = id;
-    closed = true;
-    locked = false;
+    this.closed = true;
+    this.locked = false;
+    this.fromSpace = fromSpace;
+    this.toSpace = toSpace;
+
+    if (toSpace != null) {
+      toSpace.addDoorGivingAccess(this);
+    }
   }
 
   public void processRequest(RequestReader request) {
@@ -31,45 +39,43 @@ public class Door {
     switch (action) {
       case Actions.OPEN:
         if (closed) {
-          if (locked) {
+          if (locked) { // If the door is locked and closed it can't be open
             System.out.println("Can't open door " + id + " because it's locked");
-          } else {
+          } else { // If the door is unlocked and closed, it can be open
             closed = false;
           }
-        } else {
+        } else { // If the door already open, we do nothing
           System.out.println("Can't open door " + id + " because it's already open");
         }
         break;
       case Actions.CLOSE:
-        if (closed) {
+        if (closed) { // If the door already closed, we do nothing
           System.out.println("Can't close door " + id + " because it's already closed");
-        } else {
+        } else { // If the door is open, it can be closed
           closed = true;
         }
         break;
       case Actions.LOCK:
-        // TODO
-        if (closed) {
-          if (locked) {
+        if (closed) { // If we want to lock the door, it should be closed
+          if (locked) { // If the door is locked, we do nothing
             System.out.println("Can't lock door " + id + " because it's already locked");
-          } else {
+          } else { // If the door is unlocked, we can lock it
             locked = true;
           }
-        } else {
+        } else { // If it isn't closed, we can't lock it
           System.out.println("Can't lock door " + id + " because it's open");
         }
         break;
         // fall through
       case Actions.UNLOCK:
-        // TODO
-        if (closed) {
-          if (locked) {
+        if (closed) { // If the door is locked, it should be closed
+          if (locked) { // If the door is locked, we can unlock it
             locked = false;
-          } else {
+          } else { // If the door is already unlocked, we do nothing
             System.out.println("Can't unlock door " + id + " because it's already unlocked");
           }
         }
-        else {
+        else { // If it isn't closed, we can't unlock it
           System.out.println("Can't unlock door " + id + " because it's open");
         }
         break;
@@ -83,6 +89,9 @@ public class Door {
         System.exit(-1);
     }
   }
+  // NEW METHODS
+  public Space getFromSpace() { return fromSpace; }
+  public Space getToSpace() { return toSpace; }
 
   public boolean isClosed() {
     return closed;
