@@ -45,8 +45,7 @@ public final class DirectoryUsers {
         return user;
       }
     }
-    System.out.println("user with credential " + credential + " not found");
-    return null; // otherwise we get a Java error
+    return null;
   }
 
 }

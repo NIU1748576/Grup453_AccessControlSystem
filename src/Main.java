@@ -7,6 +7,7 @@ public class Main {
   public static void main(String[] args) {
     DirectoryAreas.makeArea();
     DirectoryUsers.makeUsers();
+    DirectoryUserGroups.makeUserGroups();
     new WebServer();
   }
 }

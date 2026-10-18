@@ -3,11 +3,11 @@ package baseNoStates;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public final class DirectoryAreas {
+public final class DirectoryAreas {            //Class designated to create the Area tree with the partition 'building' as its root. Creates all spaces, partitions and doors. Part of a composite design pattern along with Area.
   private static Area rootArea;
   private static ArrayList<Door> allDoors;
 
-  public static void makeArea() {
+  public static void makeArea() {       //Main method. Creates all spaces, partitions and doors and assigns a rootArea.
     // PARTITIONS
     Partition building = new Partition("building", null);
     Partition basement = new Partition("basement", building);
@@ -57,15 +57,15 @@ public final class DirectoryAreas {
     rootArea = building;
   }
 
-  public static void setAllDoors(ArrayList<Door> doors) {
+  public static void setAllDoors(ArrayList<Door> doors) {     //Sets the ArrayList containing all doors.
     allDoors = doors;
   }
 
-  public static Area findAreaById(String id) {
+  public static Area findAreaById(String id) {     //Returns an Area object given its id. Returns null if not found.
     return rootArea.findAreaById(id); // an Area or null if not found
   }
 
-  public static Door findDoorById(String id) {
+  public static Door findDoorById(String id) {   //Returns a Door object given its id. Returns null if not found.
     for (Door allDoor : allDoors) {
       if (allDoor.getId().equals(id)) {
         return allDoor;
@@ -75,7 +75,7 @@ public final class DirectoryAreas {
   }
 
   // this is needed by RequestRefresh
-  public static ArrayList<Door> getAllDoors() {
+  public static ArrayList<Door> getAllDoors() {    //Returns an ArrayList of all doors.
     System.out.println(allDoors);
     return allDoors;
   }
