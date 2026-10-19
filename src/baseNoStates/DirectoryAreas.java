@@ -3,9 +3,9 @@ package baseNoStates;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public final class DirectoryAreas {            //Class designated to create the Area tree with the partition 'building' as its root. Creates all spaces, partitions and doors. Part of a composite design pattern along with Area.
-  private static Area rootArea;
-  private static ArrayList<Door> allDoors;
+public final class DirectoryAreas {            //Class designated to create the Area tree with the partition 'building' as its root. Creates all spaces, partitions and doors. Manages the composite structure.
+  private static Area rootArea;   //Area containing every other area. In our case, building.
+  private static ArrayList<Door> allDoors;  //ArrayList of all doors.
 
   public static void makeArea() {       //Main method. Creates all spaces, partitions and doors and assigns a rootArea.
     // PARTITIONS

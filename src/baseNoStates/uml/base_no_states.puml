@@ -10,6 +10,21 @@ class DirectoryDoors {
 
 DirectoryDoors --> "*" Door : "allDoors"
 
+class Door {
+- id : String
+- closed : boolean
+- locked : boolean
+- fromSpace : Space
+- toSpace : Space
++ processRequest(request : RequestReader)
+'+ toJson() : JSONObject
+'+ toString() : String
+'+ isClosed() :boolean
+- doAction(action : String)
++ getFromSpace() : Space
++ getToSpace() : Space
+}
+
 class DirectoryUsers {
 - {static} users : User[]
 + {static} makeUsers()
@@ -18,27 +33,27 @@ class DirectoryUsers {
 
 DirectoryUsers --> "*" User : "users"
 
-class Door {
-- id : String
-- closed : boolean
-+ Door(id : String)
-+ processRequest(request : RequestReader)
-+ setState(doorState : DoorState)
-+ toJson() : JSONObject
-'+ toString() : String
-'+ isClosed() :boolean
-'+ setClosed(b : boolean)
-'+ getStateName() : String
-- doAction(action : String)
-+ getFromSpace() : Space
-+ getToSpace() : Space
-}
-
 class User {
 - name : String
 - credential : String
-+ User(name: String, credential: String)
-+ toString() : String
+'+ toString() : String
++ getUserGroup() : UserGroup
++ canBeInSpace(space : Space) : boolean
++ canPerformAction(action : String ) : boolean
+}
+
+class DirectoryUserGroups {
+- {static} userGroups : UserGroup[]
++ {static} makeUserGroups()
++ {static} getUserGroups() : UserGroup[]
+}
+
+class UserGroup {
+- name : String
+- users : User[]
++ findUserByCredential(credential : String) : User
++ getName() : String
++ getUsers() : String[]
 }
 
 class DirectoryAreas {
@@ -66,30 +81,36 @@ class Partition {
 + getDoorsGivingAccess() : Door[]
 + findAreaById(String id) : Area
 + getSpaces() : Space[]
++ addChild(area : Area)
 }
 
 class Space {
 - doors : Door[]
++ addDoorGivingAccess(door : Door)
 + getDoorsGivingAccess() : Door[]
 + findAreaById(String id) : Area
 + getSpaces() : Space[]
 }
 
 Space --> "*" Door : "doors"
-Space <-- "1" Door : "getFromSpace()"
-Space <-- "1" Door : "getToSpace()"
+Space <-- "1" Door : "getFromSpace(), getToSpace()"
 
-Area 0- Partition
-Area 0-- Space
+DirectoryUserGroups o-- "1..*" UserGroup : userGroups
+UserGroup *-- "*" User : users
 
+Area <|-- Partition
+Area <|-- Space
+
+Space <-- "1" User : canBeInSpace
 
 class Main {
 + {static} main(args : String)
 }
 
 note right of Main::main
-DirectoryDoors.makeDoors()
-DiretoryUsers.makeUsers()
+DirectoryAreas.makeArea()
+DirectoryUsers.makeUsers()
+DirectoryUserGroups.makeUserGroups()
 
 end note
 @enduml

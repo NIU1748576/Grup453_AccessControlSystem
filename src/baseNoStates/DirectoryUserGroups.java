@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class DirectoryUserGroups {       //Class designated to create all the UserGroups.
-    private static ArrayList<UserGroup> userGroups;
+    private static ArrayList<UserGroup> userGroups; //ArrayList of all userGroups
 
     public static void makeUserGroups() {  //Main method. It creates all the UserGroups and stores them in an ArrayList.
         //Create UserGroups
@@ -16,6 +16,7 @@ public class DirectoryUserGroups {       //Class designated to create all the Us
         //Add user groups to list
         userGroups = new ArrayList<>(Arrays.asList(blank,employees,managers,admin));
     }
+// Commented because it's not being used, it is being used the one in DirectoryUsers
 //    public static User findUserByCredential(String credential) {
 //        for (UserGroup ug : userGroups) {
 //            User found = ug.findUserByCredential(credential);
@@ -27,7 +28,7 @@ public class DirectoryUserGroups {       //Class designated to create all the Us
 //        return null;
 //    }
 
-    public static ArrayList<UserGroup> getUserGroups() {
+    public static ArrayList<UserGroup> getUserGroups() {  //Returns ArrayList of all userGroups.
         return userGroups;
-    }  //Returns ArrayList of all userGroups.
+    }   //Returns ArrayList of all UserGroups.
 }

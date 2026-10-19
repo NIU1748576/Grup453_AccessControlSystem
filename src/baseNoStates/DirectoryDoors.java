@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public final class DirectoryDoors {        //Outdated class. It used to create all doors. Kept for archival purposes.
-  private static ArrayList<Door> allDoors;
+  private static ArrayList<Door> allDoors; //Outdated. ArrayList that used to contain all doors.
 
   public static void makeDoors() {    //Outdated method. It used to create all doors. Now it just prints a debugging message if it's ever used by accident.
     System.out.println("Creant Portes");

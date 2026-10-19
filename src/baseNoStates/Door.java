@@ -4,14 +4,14 @@ import baseNoStates.requests.RequestReader;
 import org.json.JSONObject;
 
 
-public class Door {
+public class Door {                 //Class meant to represent a door between two spaces. Users with certain permissions can interact with them in a variety of ways (open, close, lock, unlock, etc.)
   private final String id;
   private boolean closed; // physically
   private boolean locked; // new
   private final Space fromSpace; // Where it comes from
   private final Space toSpace; // Where it goes to
 
-  public Door(String id, Space fromSpace, Space toSpace) {
+  public Door(String id, Space fromSpace, Space toSpace) {   //Class constructor. Initializes the class's attributes and defines itself as giving access to the place it leads to.
     this.id = id;
     this.closed = true;
     this.locked = false;
@@ -22,7 +22,7 @@ public class Door {
       toSpace.addDoorGivingAccess(this);
     }
   }
-
+  //Prebuilt methods
   public void processRequest(RequestReader request) {
     // it is the Door that process the request because the door has and knows
     // its state, and if closed or open
@@ -89,17 +89,11 @@ public class Door {
         System.exit(-1);
     }
   }
-  // NEW METHODS
-  public Space getFromSpace() { return fromSpace; }
-  public Space getToSpace() { return toSpace; }
-
   public boolean isClosed() {
     return closed;
   }
 
-  public String getId() {
-    return id;
-  }
+  public String getId() { return id; }
 
   public String getStateName() {
     if (locked) {
@@ -112,10 +106,10 @@ public class Door {
   @Override
   public String toString() {
     return "Door{"
-        + ", id='" + id + '\''
-        + ", closed=" + closed
-        + ", state=" + getStateName()
-        + "}";
+            + ", id='" + id + '\''
+            + ", closed=" + closed
+            + ", state=" + getStateName()
+            + "}";
   }
 
   public JSONObject toJson() {
@@ -125,4 +119,8 @@ public class Door {
     json.put("closed", closed);
     return json;
   }
+
+  // NEW FUNCTIONS
+  public Space getFromSpace() { return fromSpace; }  //Returns the space the door is in (door is currently monodirectional).
+  public Space getToSpace() { return toSpace; } //Returns the space the door connects to (door is currently monodirectional).
 }

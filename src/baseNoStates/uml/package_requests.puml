@@ -44,7 +44,15 @@ package requests {
     + process()
     + getAction() : String
     }
+
+    class Schedule implements RequestReader{
+    - startDate : LocalDate
+    - endDate : LocalDate
+    - startTime : LocalTime
+    - endTime : LocalTime
+    - workdays : DayOfWeek[]
 }
+
 
 
 @enduml

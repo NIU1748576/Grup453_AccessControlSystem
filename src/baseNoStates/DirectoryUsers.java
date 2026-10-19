@@ -2,10 +2,10 @@ package baseNoStates;
 
 import java.util.ArrayList;
 
-public final class DirectoryUsers {
-  private static final ArrayList<User> users = new ArrayList<>();
+public final class DirectoryUsers {             //Class designated to create all Users.
+  private static final ArrayList<User> users = new ArrayList<>();  //ArrayList of all Users.
 
-  public static void makeUsers() {
+  public static void makeUsers() {  //Main method. It creates all the Users and stores them in an ArrayList.
     //TODO: make user groups according to the specifications in the comments, because
     // now all are the same
 
@@ -39,7 +39,7 @@ public final class DirectoryUsers {
     users.add(new User("Ana", "11343"));
   }
 
-  public static User findUserByCredential(String credential) {
+  public static User findUserByCredential(String credential) {   //Returns a User object given its id. Returns null if not found.
     for (User user : users) {
       if (user.getCredential().equals(credential)) {
         return user;

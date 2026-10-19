@@ -5,9 +5,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public abstract class Area {         //Abstract class meant to represent a room/group of rooms. It can either be a space or a partition through inheritance. Part of a composite design pattern along with DirectoryAreas.
-  private final String id;
-  private final Area parent;
+public abstract class Area {         //Abstract class meant to represent a room/group of rooms. It can either be a space or a partition through inheritance. 'Component' element of the composite design pattern.
+  private final String id;  //Area id
+  private final Area parent; //Parent area
 
   public Area(String id, Area parent) {     //Class constructor. Assigns the area's id and it's parent.
     this.id = id;
