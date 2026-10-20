@@ -53,7 +53,7 @@ public final class DirectoryAreas {            //Class designated to create the 
     Door d8 = new Door("D8", room3, corridor);
     Door d9 = new Door("D9", it, corridor);
 
-    allDoors = new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5, d6, d7, d8, d9))
+    allDoors = new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5, d6, d7, d8, d9));
     rootArea = building;
   }
 
