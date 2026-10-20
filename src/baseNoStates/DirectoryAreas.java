@@ -5,9 +5,9 @@ import java.util.Arrays;
 
 public final class DirectoryAreas {            //Class designated to create the Area tree with the partition 'building' as its root. Creates all spaces, partitions and doors. Manages the composite structure.
   private static Area rootArea;   //Area containing every other area. In our case, building.
-  private static ArrayList<Door> allDoors;  //ArrayList of all doors.
+  private static ArrayList<Door> allDoors;  //Stores the doors created in the makeArea method.
 
-  public static void makeArea() {       //Main method. Creates all spaces, partitions and doors and assigns a rootArea.
+  public static void makeArea() {       //Main method. Creates all spaces, partitions and doors and assigns a rootArea. DirectoryDoors used to create the doors, but it was moved here to assign areas to them.
     // PARTITIONS
     Partition building = new Partition("building", null);
     Partition basement = new Partition("basement", building);
@@ -53,16 +53,13 @@ public final class DirectoryAreas {            //Class designated to create the 
     Door d8 = new Door("D8", room3, corridor);
     Door d9 = new Door("D9", it, corridor);
 
-    setAllDoors(new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5, d6, d7, d8, d9)));
+    allDoors = new ArrayList<>(Arrays.asList(d1, d2, d3, d4, d5, d6, d7, d8, d9))
     rootArea = building;
   }
 
-  public static void setAllDoors(ArrayList<Door> doors) {     //Sets the ArrayList containing all doors.
-    allDoors = doors;
-  }
 
   public static Area findAreaById(String id) {     //Returns an Area object given its id. Returns null if not found.
-    return rootArea.findAreaById(id); // an Area or null if not found
+    return rootArea.findAreaById(id);
   }
 
   public static Door findDoorById(String id) {   //Returns a Door object given its id. Returns null if not found.
@@ -75,7 +72,7 @@ public final class DirectoryAreas {            //Class designated to create the 
   }
 
   // this is needed by RequestRefresh
-  public static ArrayList<Door> getAllDoors() {    //Returns an ArrayList of all doors.
+  public static ArrayList<Door> getAllDoors() { 
     System.out.println(allDoors);
     return allDoors;
   }
