@@ -3,18 +3,23 @@ package baseNoStates;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public final class DirectoryDoors {        //Outdated class. It used to create all doors. Kept for archival purposes.
+public final class DirectoryDoors {        
+  // Legacy class previously used to create and manage doors. 
+  // Retained primarily for archival purposes.
   private static ArrayList<Door> allDoors; //Outdated. ArrayList that used to contain all doors.
 
-  public static void makeDoors() {    //Outdated method. It used to create all doors. Now it just prints a debugging message if it's ever used by accident.
-    System.out.println("Creant Portes");  //Duty relegated to DirectoryAreas.
+  public static void makeDoors() {    
+    //Outdated method. It used to create all doors. Now it just prints a debugging message if it's ever used by accident. Duty relegated to DirectoryAreas.
+    System.out.println("Creant Portes");
   }
 
-  public static void setAllDoors(ArrayList<Door> doors) {  //Outdated method. It used to set the value of the ArrayList allDoors.
+  public static void setAllDoors(ArrayList<Door> doors) {  
+    //Outdated method. It used to set the value of the ArrayList allDoors.
     allDoors = doors;
   }
 
-  public static Door findDoorById(String id) {     //Outdated function. It used to return a Door object given its id.
+  public static Door findDoorById(String id) {     
+    //Outdated function. It used to return a Door object given its id.
     for (Door door : allDoors) {
       if (door.getId().equals(id)) {
         return door;
@@ -25,7 +30,8 @@ public final class DirectoryDoors {        //Outdated class. It used to create a
   }
 
   // this is needed by RequestRefresh
-  public static ArrayList<Door> getAllDoors() {     //Outdated function. It used to return an ArrayList with all the doors.
+  public static ArrayList<Door> getAllDoors() {     
+    //Outdated function. It used to return an ArrayList with all the doors.
     System.out.println(allDoors);
     return allDoors;
   }
