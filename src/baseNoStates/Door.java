@@ -3,13 +3,21 @@ package baseNoStates;
 import baseNoStates.requests.RequestReader;
 import org.json.JSONObject;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Observable;
+import java.util.Observer;
 
-public class Door {                 //Class meant to represent a door between two spaces. Users with certain permissions can interact with them in a variety of ways (open, close, lock, unlock, etc.)
+
+public class Door implements ClockObserver{                 //Class meant to represent a door between two spaces. Users with certain permissions can interact with them in a variety of ways (open, close, lock, unlock, etc.)
   private final String id;
   private boolean closed; // physically
   private boolean locked; // new
+  private boolean propped;
+  private boolean unlockedShortly;
   private final Space fromSpace; // Where it comes from
   private final Space toSpace; // Where it goes to
+  private LocalDateTime unlockTime;
 
   public Door(String id, Space fromSpace, Space toSpace) {   //Class constructor. Initializes the class's attributes and defines itself as giving access to the place it leads to.
     this.id = id;
@@ -35,7 +43,7 @@ public class Door {                 //Class meant to represent a door between tw
     request.setDoorStateName(getStateName());
   }
 
-  private void doAction(String action) {
+  public void doAction(String action) {
     switch (action) {
       case Actions.OPEN:
         if (closed) {
@@ -51,8 +59,13 @@ public class Door {                 //Class meant to represent a door between tw
       case Actions.CLOSE:
         if (closed) { // If the door already closed, we do nothing
           System.out.println("Can't close door " + id + " because it's already closed");
-        } else { // If the door is open, it can be closed
+        }
+        else { // If the door is open, it can be closed
           closed = true;
+          if (propped) {      // Propped --close--> Locked
+            propped = false;
+            locked = true;
+          }
         }
         break;
       case Actions.LOCK:
@@ -81,8 +94,14 @@ public class Door {                 //Class meant to represent a door between tw
         break;
         // fall through
       case Actions.UNLOCK_SHORTLY:
-        // TODO
-        System.out.println("Action " + action + " not implemented yet");
+        if (closed && locked) {
+          locked = false;
+          unlockedShortly = true;
+          unlockTime = LocalDateTime.now();
+          Clock.getInstance().addObserver(this);
+        } else {
+          System.out.println("Can't unlock shortly door " + id + "because it's already unlocked or open/propped");
+        }
         break;
       default:
         assert false : "Unknown action " + action;
@@ -93,15 +112,21 @@ public class Door {                 //Class meant to represent a door between tw
     return closed;
   }
 
-  public String getId() { return id; }
+  public String getId() {
+    return id;
+  }
 
   public String getStateName() {
-    if (locked) {
+    if (propped)
+      return "propped";
+    if (unlockedShortly)
+      return "unlocked_shortly";
+    if (locked)
       return "locked";
-    } else {
+    else
       return "unlocked";
-    }
   }
+  public void setPropped(Boolean isItPropped) {propped = isItPropped;}
 
   @Override
   public String toString() {
@@ -123,4 +148,17 @@ public class Door {                 //Class meant to represent a door between tw
   // NEW FUNCTIONS
   public Space getFromSpace() { return fromSpace; }  //Returns the space the door is in (door is currently monodirectional).
   public Space getToSpace() { return toSpace; } //Returns the space the door connects to (door is currently monodirectional).
+
+  @Override
+  public synchronized void update(LocalDateTime now) {
+    if (Duration.between(unlockTime, now).compareTo(Duration.ofSeconds(10)) >= 0) {
+      unlockedShortly = false;
+      if (closed) {
+        locked = true;
+      } else {
+        propped = true;
+      }
+      Clock.getInstance().deleteObserver(this);
+    }
+  }
 }
