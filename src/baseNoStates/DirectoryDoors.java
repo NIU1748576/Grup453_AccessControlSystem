@@ -7,7 +7,7 @@ public final class DirectoryDoors {        //Outdated class. It used to create a
   private static ArrayList<Door> allDoors; //Outdated. ArrayList that used to contain all doors.
 
   public static void makeDoors() {    //Outdated method. It used to create all doors. Now it just prints a debugging message if it's ever used by accident.
-    System.out.println("Creant Portes");
+    System.out.println("Creant Portes");  //Duty relegated to DirectoryAreas.
   }
 
   public static void setAllDoors(ArrayList<Door> doors) {  //Outdated method. It used to set the value of the ArrayList allDoors.
