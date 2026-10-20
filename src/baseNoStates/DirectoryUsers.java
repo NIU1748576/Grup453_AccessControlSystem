@@ -2,12 +2,13 @@ package baseNoStates;
 
 import java.util.ArrayList;
 
-public final class DirectoryUsers {             //Class designated to create all Users.
+public final class DirectoryUsers {             
+  // Utility class designated to create and manage all User instances in the system.
   private static final ArrayList<User> users = new ArrayList<>();  //ArrayList of all Users.
 
-  public static void makeUsers() {  //Main method. It creates all the Users and stores them in an ArrayList.
-    //TODO: make user groups according to the specifications in the comments, because
-    // now all are the same
+  public static void makeUsers() {  
+    // Instantiates all system users across different privilege tiers 
+    // (blank, employees, managers, admin) and stores them in the master list.
 
     // users without any privilege, just to keep temporally users instead of deleting them,
     // this is to withdraw all permissions but still to keep user data to give back
@@ -39,7 +40,8 @@ public final class DirectoryUsers {             //Class designated to create all
     users.add(new User("Ana", "11343"));
   }
 
-  public static User findUserByCredential(String credential) {   //Returns a User object given its id. Returns null if not found.
+  public static User findUserByCredential(String credential) {   
+    // Searches the global registry and returns a User object given its credential ID. Returns null if no match is found.
     for (User user : users) {
       if (user.getCredential().equals(credential)) {
         return user;
