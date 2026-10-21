@@ -5,21 +5,26 @@ import org.json.JSONObject;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Observable;
-import java.util.Observer;
 
 
-public class Door implements ClockObserver{                 //Class meant to represent a door between two spaces. Users with certain permissions can interact with them in a variety of ways (open, close, lock, unlock, etc.)
+
+public class Door implements ClockObserver{ // Class meant to represent a physical door connecting two spaces.
+// Users with certain permissions can interact with it in a variety of ways (open, close, lock, unlock, etc.)
+// We use this class as the "Observer" of the observer design pattern, because that way we can have an external
+// object change periodically to know if the door has been unlocked shortly at least 10 seconds to lock it again.
+
   private final String id;
-  private boolean closed; // physically
-  private boolean locked; // new
+  private boolean closed;
+  private boolean locked;
   private boolean propped;
   private boolean unlockedShortly;
   private final Space fromSpace; // Where it comes from
   private final Space toSpace; // Where it goes to
-  private LocalDateTime unlockTime;
+  private LocalDateTime timeSinceUnlockedShortly;
 
-  public Door(String id, Space fromSpace, Space toSpace) {   //Class constructor. Initializes the class's attributes and defines itself as giving access to the place it leads to.
+    public Door(String id, Space fromSpace, Space toSpace) {
+//Class constructor.
+// Initializes the door and registers it with the destination space.
     this.id = id;
     this.closed = true;
     this.locked = false;
@@ -30,7 +35,10 @@ public class Door implements ClockObserver{                 //Class meant to rep
       toSpace.addDoorGivingAccess(this);
     }
   }
-  //Prebuilt methods
+// Spaces need to know their incoming doors to realize what
+// space they lead to.
+
+  //Prebuilt method
   public void processRequest(RequestReader request) {
     // it is the Door that process the request because the door has and knows
     // its state, and if closed or open
@@ -44,6 +52,8 @@ public class Door implements ClockObserver{                 //Class meant to rep
   }
 
   public void doAction(String action) {
+    // Executes a specific door action (OPEN, CLOSE, LOCK, UNLOCK or UNLOCK_SHORTLY)
+    // after validating physical and security constraints.
     switch (action) {
       case Actions.OPEN:
         if (closed) {
@@ -57,10 +67,10 @@ public class Door implements ClockObserver{                 //Class meant to rep
         }
         break;
       case Actions.CLOSE:
-        if (closed) { // If the door already closed, we do nothing
+        if (closed) {
           System.out.println("Can't close door " + id + " because it's already closed");
         }
-        else { // If the door is open, it can be closed
+        else {
           closed = true;
           if (propped) {      // Propped --close--> Locked
             propped = false;
@@ -69,35 +79,34 @@ public class Door implements ClockObserver{                 //Class meant to rep
         }
         break;
       case Actions.LOCK:
-        if (closed) { // If we want to lock the door, it should be closed
-          if (locked) { // If the door is locked, we do nothing
+        if (closed) {
+          if (locked) {
             System.out.println("Can't lock door " + id + " because it's already locked");
-          } else { // If the door is unlocked, we can lock it
+          } else {
             locked = true;
           }
-        } else { // If it isn't closed, we can't lock it
+        } else {
           System.out.println("Can't lock door " + id + " because it's open");
         }
         break;
-        // fall through
       case Actions.UNLOCK:
-        if (closed) { // If the door is locked, it should be closed
-          if (locked) { // If the door is locked, we can unlock it
+        if (closed) {
+          if (locked) {
             locked = false;
-          } else { // If the door is already unlocked, we do nothing
+          } else {
             System.out.println("Can't unlock door " + id + " because it's already unlocked");
           }
         }
-        else { // If it isn't closed, we can't unlock it
+        else {
           System.out.println("Can't unlock door " + id + " because it's open");
         }
         break;
-        // fall through
+
       case Actions.UNLOCK_SHORTLY:
         if (closed && locked) {
           locked = false;
           unlockedShortly = true;
-          unlockTime = LocalDateTime.now();
+          timeSinceUnlockedShortly = LocalDateTime.now();
           Clock.getInstance().addObserver(this);
         } else {
           System.out.println("Can't unlock shortly door " + id + "because it's already unlocked or open/propped");
@@ -126,7 +135,6 @@ public class Door implements ClockObserver{                 //Class meant to rep
     else
       return "unlocked";
   }
-  public void setPropped(Boolean isItPropped) {propped = isItPropped;}
 
   @Override
   public String toString() {
@@ -151,7 +159,11 @@ public class Door implements ClockObserver{                 //Class meant to rep
 
   @Override
   public synchronized void update(LocalDateTime now) {
-    if (Duration.between(unlockTime, now).compareTo(Duration.ofSeconds(10)) >= 0) {
+      // Called by Clock via notifyObservers().
+    // Looks the duration the door has been unlocked shortly and if it's 10 seconds or more,
+    // it sets the door to locked or propped and deletes the observer.
+      int LOCK_TIMER = 10;
+      if (Duration.between(timeSinceUnlockedShortly, now).compareTo(Duration.ofSeconds(LOCK_TIMER)) >= 0) {
       unlockedShortly = false;
       if (closed) {
         locked = true;
