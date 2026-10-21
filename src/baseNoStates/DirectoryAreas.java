@@ -58,7 +58,7 @@ public final class DirectoryAreas {            //Class designated to create the 
   }
 
 
-  public static Area findAreaById(String id) {     //Returns an Area object given its id. Returns null if not found.
+  public static Area findAreaById(String id) {   //Calls itself on the Area class implementation. Returns an Area object given its id. Returns null if not found.
     return rootArea.findAreaById(id);
   }
 
