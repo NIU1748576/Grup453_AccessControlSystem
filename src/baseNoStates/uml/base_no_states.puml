@@ -10,10 +10,13 @@ class DirectoryDoors {
 
 DirectoryDoors --> "*" Door : "allDoors"
 
-class Door {
+class Door implements ClockObserver{
 - id : String
 - closed : boolean
 - locked : boolean
+- propped : boolean
+- unlockedShortly : boolean
+- unlockTime : LocalDateTime
 - fromSpace : Space
 - toSpace : Space
 + processRequest(request : RequestReader)
@@ -23,6 +26,7 @@ class Door {
 - doAction(action : String)
 + getFromSpace() : Space
 + getToSpace() : Space
++ update(now : LocalDateTime)
 }
 
 class DirectoryUsers {
@@ -102,6 +106,18 @@ Area <|-- Partition
 Area <|-- Space
 
 Space <-- "1" User : canBeInSpace
+
+class Clock {
+- {static} instance : Clock
+- observers : ClockObserver[]
+- Clock()
+}
+
+interface ClockObserver {
+  update(now : LocalDateTime)
+}
+
+Clock --> "*" ClockObserver : ClockObserver
 
 class Main {
 + {static} main(args : String)
