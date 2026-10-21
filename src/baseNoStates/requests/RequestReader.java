@@ -147,11 +147,10 @@ public class RequestReader implements Request {
         reasons.add("Can't lock an open door");
       else if(door.getStateName().equals("locked") && action.equals(Actions.OPEN))
         reasons.add("Can't open a locked door");
-      else {
-        if (authorized)
+      else if (door.getStateName().equals("unlocked_shortly") && action.equals(Actions.LOCK))
+        reasons.add("Can't lock a shortly unlocked door");
+      else if (authorized)
           reasons.add("All correct");
-      }
-      //System.out.println("Current time is " + now);
     }
   }
 }
